@@ -8,6 +8,7 @@ import com.sczhaoqi.skdemo.service.UserDetailsServiceImpl;
 import com.sczhaoqi.skdemo.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,11 +49,12 @@ public class UserController
     }
 
     @GetMapping("info")
-    public ResponseBean<UserAccountDto> info(Authentication authentication){
-        UserAccountDto user = (UserAccountDto) authentication.getPrincipal();
-        if(user == null){
-            return ResponseBean.error("请重新登陆");
+    public ResponseBean<UserAccountDto> info(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(principal instanceof UserAccountDto)){
+            return ResponseBean.error("未登录,请重新登陆");
         }
+        UserAccountDto user = (UserAccountDto) principal;
         User loginUser = userDetailsService.findUserByUsername(user.getUsername());
         if(loginUser!=null){
             return ResponseBean.ok(new UserAccountDto(loginUser));

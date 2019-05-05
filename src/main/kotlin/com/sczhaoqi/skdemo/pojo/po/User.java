@@ -54,5 +54,10 @@ public class User
         this.setExpired(other.getExpired());
         this.setEnabled(other.getEnabled());
         this.setRoles(other.getRoles());
+
+        this.setCreateTime(other.getCreateTime());
+        this.setCreateUser(other.getCreateUser());
+        this.setUpdateTime(other.getUpdateTime());
+        this.setUpdateUser(other.getUpdateUser());
     }
 }
